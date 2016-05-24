@@ -3,11 +3,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <body>
-<h2>Nobody knows that I'm Batman!</h2>
-<form action = ${pageContext.servletContext.contextPath}/TestServlet method="post" >
-    <table><tr><td>${items='controller' var = 'c'}</td></tr></table>
-<form>
-<p>${c}</p>
-<p></p>
+<h2>Project search</h2>
+<form action = ${pageContext.servletContext.contextPath}/PrimeServlet method="post" >
+    <select name = 'project'>
+        <option value = 'default' />
+        <option value = 'all'> all Projects</option>
+        <option value = 'project 1'> Project 1 </option>
+        <option value = 'project 2'> Project 2 </option>
+    </select>
+    <input type='submit' value = 'Search'>
+</form>
 </body>
 </html>

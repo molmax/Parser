@@ -26,18 +26,14 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         DBControllerImp controller = new DBControllerImp();
         Connection connection = controller.getConnection();
-
         HttpSession session = request.getSession();
         String submit = request.getParameter("submit");
         session.setAttribute("submit", submit);
         session.setAttribute("connection", connection);
         session.setAttribute("controller", controller);
-
         PrintWriter out = response.getWriter();
-
         out.println("<!DOCTYPE html>");
         out.println("<head>");
         out.println("<title> </title>");
@@ -48,8 +44,5 @@ public class TestServlet extends HttpServlet {
         out.println("<p>connection</p>"+connection);
         out.println("</body>");
         out.println("</html>");
-
-        RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
-        rd.forward(request, response);
     }
 }

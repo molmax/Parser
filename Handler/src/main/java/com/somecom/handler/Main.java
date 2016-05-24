@@ -21,7 +21,6 @@ public class Main {
     private static final String INSERT = "INSERT INTO \"Requirements\" (\"Requirement\", \"Description\", \"Comments\", \"Requirement_Implemented\", \"Project\") VALUES(?,?,?,?,?);";
 
     public static void main(String[] args){
-/*
         List <Entry> entries = new ArrayList<Entry>();
         ParserImp parser = new ParserImp();
 
@@ -81,7 +80,6 @@ public class Main {
         }
 
         controller.closeConnection();
-        */
     }
 }
 
