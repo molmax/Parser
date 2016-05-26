@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
 import java.util.Properties;
+import com.somecom.parser.*;
 
 /**
  * Created by Cannon on 16.04.2016.
@@ -223,7 +225,7 @@ public class DBControllerImp implements DBController {
 
             rs = statement.executeQuery(query);
             while (rs.next()){
-                int f;
+
                 String entryID = rs.getString("ID");
                 String requirement = rs.getString("Requirement");
                 String description = rs.getString("Description");
@@ -250,11 +252,191 @@ public class DBControllerImp implements DBController {
         return rs;
     }
 
-    public int one = 2;
-    public String s = "Hey";
+    /**
+     * <p>Метод читает все записи из БД (для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    @Override
+    public List<Entry> readAllFromDataBase(List <Entry> entries){
 
-    public int h(){
-        return 2*2;
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        connection = getConnection();
+        try{
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * FROM \"Requirements\"");
+
+            dataBaseEntryInit(entries, rs);
+
+        } catch (SQLException e) {
+            connection.rollback();
+            e.printStackTrace();
+        }
+
+        finally {
+            connection.commit();
+            closeStatement();
+            closeConnection();
+        }
+        } catch (SQLException e){
+            System.out.println("Method failed!");
+            e.printStackTrace();
+        }
+        return entries;
+    }
+
+    /**
+     * <p>Метод читает записи из выбранных проектов в БД(для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param projectName Имя интересующего проекта
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    @Override
+    public List<Entry> readFromDataBaseByProjectName (List <Entry> entries, String projectName) {
+
+        final String QUERY = "SELECT * FROM \"Requirements\" WHERE \"Project\" = ?";
+
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        connection = getConnection();
+        try{
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement ps = connection.prepareStatement(QUERY);
+            ps.setString(1,projectName);
+            rs = ps.executeQuery();
+
+            dataBaseEntryInit(entries, rs);
+
+        } catch (SQLException e) {
+            connection.rollback();
+            e.printStackTrace();
+        }
+        finally {
+            connection.commit();
+            closeStatement();
+            closeConnection();
+        }
+        } catch (SQLException e){
+            System.out.println("Method failed!");
+            e.printStackTrace();
+        }
+        return entries;
+    }
+
+    /**
+     * <p>Метод возвращает записи из БД в соответствии с выбранными ключевыми словами(для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param requirement Интересующий параметр(требование)
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    @Override
+    public List<Entry> readFromDataBaseByRequirement (List <Entry> entries, String requirement) {
+
+        final String QUERY = "SELECT * FROM \"Requirements\" WHERE \"Requirement\" = ?";
+
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        connection = getConnection();
+        try{
+            try {
+                connection.setAutoCommit(false);
+                PreparedStatement ps = connection.prepareStatement(QUERY);
+                ps.setString(1,requirement);
+                rs = ps.executeQuery();
+
+                dataBaseEntryInit(entries, rs);
+
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+            finally {
+                connection.commit();
+                closeStatement();
+                closeConnection();
+            }
+        } catch (SQLException e){
+            System.out.println("Method failed!");
+            e.printStackTrace();
+        }
+        return entries;
+    }
+
+    /**
+     * <p>Метод возвращает записи из БД в соответствии с выбранными ключевыми словами и именем проекта(для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param requirement Интересующий параметр(требование)
+     * @param projectName Имя интересующего проекта
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    @Override
+    public List<Entry> readFromDataBaseByProjectNameAndRequirement (List <Entry> entries, String projectName, String requirement) {
+
+        final String QUERY = "SELECT * FROM \"Requirements\" WHERE \"Project\" = ? AND\"Requirement\" = ?";
+
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        connection = getConnection();
+        try{
+            try {
+                connection.setAutoCommit(false);
+                PreparedStatement ps = connection.prepareStatement(QUERY);
+                ps.setString(1,projectName);
+                ps.setString(2,requirement);
+                rs = ps.executeQuery();
+
+                dataBaseEntryInit(entries, rs);
+
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+            finally {
+                connection.commit();
+                closeStatement();
+                closeConnection();
+            }
+        } catch (SQLException e){
+            System.out.println("Method failed!");
+            e.printStackTrace();
+        }
+        return entries;
+    }
+
+    /**
+     * <p>В методе инициализируются поля объекта данными из БД. Для использования в других методах чтения из БД</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param rs Result Set для работы с объектами БД
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    protected static List<Entry> dataBaseEntryInit(List <Entry> entries, ResultSet rs) throws SQLException {
+
+        while (rs.next()){
+            Entry entry = new Entry();
+            entry.setRequirement(rs.getString("Requirement"));
+            entry.setDescription(rs.getString("Description"));
+            entry.setComment(rs.getString("Comments"));
+            entry.setResult(rs.getString("Requirement_Implemented"));
+            entry.setProjectName(rs.getString("Project"));
+            entries.add(entry);
+        }
+        return entries;
     }
 }
 

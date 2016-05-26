@@ -9,18 +9,9 @@
     <servlet-class>com.somecom.servlets.PrimeServlet</servlet-class>
   </servlet>
 
-  <servlet>
-    <servlet-name>TestServlet</servlet-name>
-    <servlet-class>com.somecom.servlets.TestServlet</servlet-class>
-  </servlet>
-
   <servlet-mapping>
     <servlet-name>PrimeServlet</servlet-name>
     <url-pattern>/PrimeServlet</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>TestServlet</servlet-name>
-    <url-pattern>/TestServlet</url-pattern>
-  </servlet-mapping>
 </web-app>

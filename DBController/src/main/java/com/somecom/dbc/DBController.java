@@ -1,7 +1,10 @@
 package com.somecom.dbc;
 
+import com.somecom.parser.Entry;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * Created by Cannon on 16.04.2016.
@@ -9,6 +12,7 @@ import java.sql.ResultSet;
  */
 
 public interface DBController {
+
     /**
      * <p>Устанавливает соединение с базой данных</p>
      * *@return объект connection
@@ -66,4 +70,37 @@ public interface DBController {
      * @return Возвращает ResultSet, содержащий все записи в текущей таблице
      * */
     ResultSet getObjs();
+
+    //Методы для работы с сервером
+    /**
+     * <p>Метод читает все записи из БД (для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    List<Entry> readAllFromDataBase(List <Entry> entries);
+
+    /**
+     * <p>Метод читает записи из выбранных проектов в БД(для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param projectName Имя интересующего проекта
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    List<Entry> readFromDataBaseByProjectName (List <Entry> entries, String projectName);
+
+    /**
+     * <p>Метод возвращает записи из БД в соответствии с выбранными ключевыми словами(для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param requirement Интересующий параметр(требование)
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    List<Entry> readFromDataBaseByRequirement (List <Entry> entries, String requirement);
+
+    /**
+     * <p>Метод возвращает записи из БД в соответствии с выбранными ключевыми словами и именем проекта(для web)</p>
+     * @param entries Пустая коллекция, которую метод заполняет инициализированными объектами
+     * @param requirement Интересующий параметр(требование)
+     * @param projectName Имя интересующего проекта
+     * @return Возвращает коллекцию объектов, соответствующих записям в БД
+     * */
+    List<Entry> readFromDataBaseByProjectNameAndRequirement (List <Entry> entries, String projectName, String requirement);
 }

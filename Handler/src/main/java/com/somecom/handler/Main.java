@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 /**
  * Created by Cannon on 23.04.2016.
- * <p>Модуль отвечающий за работу приложения</p>
+ * <p>Модуль отвечающий за работу консольного приложения</p>
  */
 public class Main {
 
@@ -24,7 +24,7 @@ public class Main {
         List <Entry> entries = new ArrayList<Entry>();
         ParserImp parser = new ParserImp();
 
-        try {
+       try {
             parser.parseXLS(XLSX_FILE_PATH,entries);
         } catch (IOException e) {
             System.out.println("Faield to parse file!");
@@ -34,8 +34,6 @@ public class Main {
 
         DBControllerImp controller = new DBControllerImp();
         Connection con = controller.getConnection();
-
-
 
          String requirement;
          String description;
